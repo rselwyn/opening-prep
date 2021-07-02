@@ -17,6 +17,13 @@ const Home = () => {
   const [selectVisible, setSelectVisible] = useState(false)
   const [fen, setFen] = useState("")
   const [lastMove, setLastMove] = useState()
+
+  const undo = () => {
+    console.log("undo")
+    chess.undo()
+    setFen(chess.fen())
+  }
+
   const onMove = (from, to) => {
     const moves = chess.moves({ verbose: true })
     for (let i = 0, len = moves.length; i < len; i++) { /* eslint-disable-line */
@@ -111,6 +118,8 @@ const Home = () => {
           onMove={onMove}
           style={{ margin: "auto" }}
         />
+
+        <button onClick={undo}>Undo</button>
 
       <style jsx>{`
         li {
