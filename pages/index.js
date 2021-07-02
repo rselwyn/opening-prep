@@ -2,6 +2,8 @@ import { useUser } from '../lib/hooks'
 import React, { useState } from 'react';
 import Layout from '../components/layout'
 import PGNForm from '../components/pgnform'
+import Chessground from '../components/chessground'
+import 'react-chessground/dist/styles/chessground.css'
 
 const Home = () => {
 
@@ -39,6 +41,9 @@ const Home = () => {
     
       <PGNForm onSubmit={uploadPGN}/>
 
+      <Chessground viewOnly={true}/>
+
+
       <style jsx>{`
         li {
           margin-bottom: 0.5rem;
@@ -48,8 +53,7 @@ const Home = () => {
           word-wrap: break-word;
         }
       `}</style>
-    </Layout>
-  )
+    </Layout>  )
 }
 
 export default Home
