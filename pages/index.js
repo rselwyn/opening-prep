@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Layout from '../components/layout'
 import PGNForm from '../components/pgnform'
 import Chessground from '../components/chessground'
-import Chess, { ChessInstance, ShortMove } from "chess.js";
+import Chess, { ChessInstance, ShortMove } from "../lib/chess.js";
 
 
 
