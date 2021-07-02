@@ -35,13 +35,13 @@ export default nextConnect()
     try {
       const user = await authenticate('lichess', req, res)
       // session is the payload to save in the token, it may contain basic info about the user
-    //   const session = { ...user }
+      const session = { ...user }
 
-    //   await setLoginSession(res, session)
+      await setLoginSession(res, session)
 
-    //   res.status(200).send({ done: true })
-    // } catch (error) {
-    //   console.error(error)
-    //   res.status(401).send(error.message)
+      res.status(200).send({ done: true })
+    } catch (error) {
+      console.error(error)
+      res.status(401).send(error.message)
     }
   })
