@@ -1,11 +1,18 @@
 from flask import Flask, Response, request, jsonify
 import backend
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def catch_all(path):
+@app.route('/')
+def home():
+	return "hi"
+
+@app.route('/pgns', methods=['POST'])
+@cross_origin()
+def catch_all():
 	pgns = request.data
+	print(pgns)
 	stuff = backend.load_file_to_lines(pgns)
-	return jsonify({"juicer":"yes"})
+	print(stuff)
+	return jsonify({"juicer":"yes", "lines": stuff})

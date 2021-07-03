@@ -18,12 +18,15 @@ def pp(parsed):
 	print(json.dumps(parsed, indent=4, sort_keys=True))
 
 def load_file_to_lines(pgntext):
-	pgntext = pgntext.decode('utf-8')
+	try:
+		pgntext = pgntext.decode('utf-8')
+	except:
+		pass
 	prep = chess.pgn.read_game(io.StringIO(pgntext))
 	line_list = []
 	for i in prep.variations:
 		dfs_move_tree([], i, line_list)
-	print(line_list)
+	return line_list
 
 def lookup_position_masters(fen):
 	# Returns top n moves
@@ -34,6 +37,6 @@ def lookup_position_masters(fen):
 	# pp(json_back)
 	return [i["uci"] for i in json_back["moves"]]
 
-# load_file_to_lines(open("ponzi.pgn"))
+# print(load_file_to_lines(open("tp.pgn").read()))
 
-print(lookup_position_masters("rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1"))
+# print(lookup_position_masters("rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1"))
