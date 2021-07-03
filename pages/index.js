@@ -4,10 +4,9 @@ import Layout from '../components/layout'
 import PGNForm from '../components/pgnform'
 import Chessground from '../components/chessground'
 import Chess, { ChessInstance, ShortMove } from "../lib/chess.js";
-
-
-
+import { Button, Container } from '@material-ui/core';
 import 'react-chessground/dist/styles/chessground.css'
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 const Home = () => {
 
@@ -101,8 +100,9 @@ const Home = () => {
     }
   }
 
-  return (
-    <Layout>
+  return (<>
+    <CssBaseline/>
+    <Container maxWidth="lg">
       <h1>PGN Juicer</h1>
 
     
@@ -130,7 +130,7 @@ const Home = () => {
           word-wrap: break-word;
         }
       `}</style>
-    </Layout>  )
+    </Container>  </>)
 }
 
 export default Home

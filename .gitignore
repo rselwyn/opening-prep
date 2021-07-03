@@ -2,3 +2,7 @@ node_modules/
 .next/
 __pycache__/
 *.pgn
+
+.vercel
+.vscode
+yarn.lock

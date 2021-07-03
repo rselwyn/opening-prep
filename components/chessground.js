@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Chessground as NativeChessground } from 'chessground'
 
-export default class Chessground extends React.Component {
 
-  static propTypes = {
+export default function Chessground(props) {
+
+  let propTypes = {
     width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     fen: PropTypes.string,
@@ -34,7 +35,7 @@ export default class Chessground extends React.Component {
     drawable: PropTypes.object
   }
 
-  static defaultProps = {
+  let defaultProps = {
     coordinates: true,
     resizable: true,
     highlight: {
@@ -43,9 +44,9 @@ export default class Chessground extends React.Component {
     }
   }
 
-  buildConfigFromProps(props) {
+  let buildConfigFromProps = (props) => {
     const config = { events: {} }
-    Object.keys(Chessground.propTypes).forEach(k => {
+    Object.keys(propTypes).forEach(k => {
       const v = props[k]
       if (typeof v !== 'undefined') {
         const match = k.match(/^on([A-Z]\S*)/)
@@ -59,26 +60,23 @@ export default class Chessground extends React.Component {
     return config
   }
 
-  componentDidMount() {
-    this.cg = NativeChessground(this.el, this.buildConfigFromProps(this.props))
-  }
+    let el = useRef();
+     let [cg, setCg] = useState()
 
-  componentWillReceiveProps(nextProps) {
-    this.cg.set(this.buildConfigFromProps(nextProps))
-  }
+    useEffect(() => {
+        console.log("useEffect ran")
+     setCg(NativeChessground(el.current, buildConfigFromProps(props)))
+    }, [el, setCg, props])
 
-  componentWillUnmount() {
-    this.cg.destroy()
-  }
 
-  render() {
-    const props = { style: { ...this.props.style } }
-    if (this.props.width) {
-      props.style.width = this.props.width
+
+  
+    const comprops = { style: { ...props.style } }
+    if (props.width) {
+      comprops.style.width = props.width
     }
-    if (this.props.height) {
-      props.style.height = this.props.height
+    if (props.height) {
+      comprops.style.height = props.height
     }
-    return <div ref={el => this.el = el} {...props} />
-  }
+    return (<div ref={el} {...comprops} />)
 }
