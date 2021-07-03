@@ -6,18 +6,21 @@ import urllib.parse
 from urllib.request import urlopen
 
 
-def dfs_move_tree(visited, current_node, line_list):
-	if len(current_node.variations) == 0:
+def dfs_move_tree(visited, current_node, line_list, depth_limit):
+	if len(current_node.variations) == 0 or depth_limit == 0:
 		line_list.append(visited)
 		return
 	else:
 		for next_node in current_node.variations:
-			dfs_move_tree(visited + [str(current_node.move)], next_node, line_list)
+			dfs_move_tree(visited + [str(current_node.move)], next_node, line_list, depth_limit - 1)
 
 def pp(parsed):
 	print(json.dumps(parsed, indent=4, sort_keys=True))
 
 def load_file_to_lines(pgntext):
+	limit_depth = request.args.get('depth', default = 10000)
+	sorting_method = request.args.get('sort', default = "masters") # Options: Masters, Lichess, DFS
+	
 	try:
 		pgntext = pgntext.decode('utf-8')
 	except:
@@ -25,7 +28,7 @@ def load_file_to_lines(pgntext):
 	prep = chess.pgn.read_game(io.StringIO(pgntext))
 	line_list = []
 	for i in prep.variations:
-		dfs_move_tree([], i, line_list)
+		dfs_move_tree([], i, line_list, limit_depth)
 	return line_list
 
 def lookup_position_masters(fen):
