@@ -1,5 +1,5 @@
 import { useUser } from '../lib/hooks'
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Layout from '../components/layout'
 import PGNForm from '../components/pgnform'
 import Chessground from '../components/chessground'
@@ -12,19 +12,42 @@ import Player from '../components/player';
 
 const Home = () => {
 
-  const [tree, setTree] = useState({});
+  const [tree, setTree] = useState([]);
  const [chess, setChess] = useState(new Chess())
   const [pendingMove, setPendingMove] = useState()
   const [selectVisible, setSelectVisible] = useState(false)
   const [fen, setFen] = useState("")
   const [lastMove, setLastMove] = useState()
+  const [pgn, setPgn] = useState(false);
 
 
-  const [player, setPlayer] = useState();
 
-  // player {
-  //  running: true
-  //}
+    useInterval(() => {
+        if (pgn) {
+
+      move();
+        }
+    }, 500);
+  
+
+
+  function useInterval(callback, delay) {
+    const savedCallback = useRef();
+
+    // Remember the latest callback.
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+
+    // Set up the interval.
+    useEffect(() => {
+      let id = setInterval(() => {
+        savedCallback.current();
+      }, delay);
+      return () => clearInterval(id);
+    }, [delay]);
+  }
+
 
   const undo = () => {
     console.log("undo")
@@ -32,7 +55,19 @@ const Home = () => {
     setFen(chess.fen())
   }
 
+  const move = () => {
+
+    let from = tree[0].substring(0,2)
+    let to = tree[0].substring(2)
+    if (chess.move({ from, to, promotion: "x" })) {
+      setFen(chess.fen());
+      setLastMove([from, to]);
+      setTree(tree.slice(1));
+    }
+  }
+
   const onMove = (from, to) => {
+    console.log(from, to)
     const moves = chess.moves({ verbose: true })
     for (let i = 0, len = moves.length; i < len; i++) { /* eslint-disable-line */
       if (moves[i].flags.indexOf("p") !== -1 && moves[i].from === from) {
@@ -50,12 +85,21 @@ const Home = () => {
 
   const randomMove = () => {
     const moves = chess.moves({ verbose: true })
-    const move = moves[Math.floor(Math.random() * moves.length)]
-    if (moves.length > 0) {
-      chess.move(move.san)
-      setFen(chess.fen())
-      setLastMove([move.from, move.to])
-    }
+    // const move = moves[Math.floor(Math.random() * moves.length)]
+    // if (moves.length > 0) {
+    //   chess.move(move.san)
+    //   setFen(chess.fen())
+    //   setLastMove([move.from, move.to])
+    // }
+  moves.forEach(move => console.log(move.san));
+  const result = moves.filter((move) => move.san == tree[0]);
+  console.log(result)
+  chess.move(result[0].san)
+  setFen(chess.fen())
+  setLastMove([result[0].from, result[0].to]);
+
+
+
   }
 
   const promotion = e => {
@@ -85,30 +129,38 @@ const Home = () => {
     }
   }
 
+  async function readFileAsync(file) {
+    return new Promise((resolve, reject) => {
+      let reader = new FileReader();
+
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+
+      reader.onerror = reject;
+
+      reader.readAsText(file);
+    });
+  }
+
   async function uploadPGN(e) {
 
-    console.log(e)
-    e.preventDefault()
+    let body = await readFileAsync(e[0]);
 
-    // if (errorMsg) setErrorMsg('')
+    console.log(body)
 
-    const body = {
-      pgn: e.currentTarget.pgn.value,
-    }
-      try {
-      const res = await fetch("/api/pgn", {
+      let res = await fetch("https://opening-backend.herokuapp.com/pgns", {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'text/plain' },
+        body: body,
       })
 
-      console.log(res.json());
 
-      setTree(res.json());
-      
-    } catch (error) {
-      console.error('An unexpected error happened occurred:', error)
-    }
+      let data = await res.json()
+
+      console.log(data.lines[0])
+      setTree(data.lines[0])
+      setPgn(true);
   }
 
   return (<>
