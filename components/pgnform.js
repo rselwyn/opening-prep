@@ -1,56 +1,29 @@
+import React, { useState } from "react";
+import { Button } from "@material-ui/core";
+import { DropzoneArea, DropzoneDialog } from "material-ui-dropzone";
 
-const PGNForm = ({ onSubmit }) => (
-  <form onSubmit={onSubmit}>
-    <label>
-      <span>PGN</span>
-      <input type="text" name="pgn" required />
-    </label>
+const PGNForm = ({ onSubmit }) => {
+  const [open, setOpen] = useState(false);
 
-    <div className="submit">
-          <button type="submit">Submit PGN</button>
-    </div>
+  return (
+    <>
+      <Button onClick={() => setOpen(true)} color="primary" variant="contained">
+        Submit PGN
+      </Button>
 
+      <DropzoneDialog
+        // acceptedFiles={["image/*"]}
+        cancelButtonText={"cancel"}
+        submitButtonText={"submit"}
+        maxFileSize={5000000}
+        open={open}
+        onClose={() => setOpen(false)}
+        onSave={onSubmit}
+        showPreviews={true}
+        showFileNamesInPreview={true}
+      />
+    </>
+  );
+};
 
-    <style jsx>{`
-      form,
-      label {
-        display: flex;
-        flex-flow: column;
-      }
-      label > span {
-        font-weight: 600;
-      }
-      input {
-        padding: 8px;
-        margin: 0.3rem 0 1rem;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
-      .submit {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .submit > a {
-        text-decoration: none;
-      }
-      .submit > button {
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-        background: #fff;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
-      .submit > button:hover {
-        border-color: #888;
-      }
-      .error {
-        color: brown;
-        margin: 1rem 0 0;
-      }
-    `}</style>
-  </form>
-)
-
-export default PGNForm
+export default PGNForm;
