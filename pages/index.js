@@ -4,10 +4,20 @@ import Layout from "../components/layout";
 import PGNForm from "../components/pgnform";
 import Chessground from "../components/chessground";
 import Chess, { ChessInstance, ShortMove } from "../lib/chess.js";
-import { Button, Container } from "@material-ui/core";
-import "react-chessground/dist/styles/chessground.css";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Player from "../components/player";
+import { makeStyles } from '@material-ui/core/styles';
+import { Button, Container  } from '@material-ui/core';
+import 'react-chessground/dist/styles/chessground.css'
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Player from '../components/player';
+
+// Toolbar 
+
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+
 
 const Home = () => {
   const [tree, setTree] = useState([]);
@@ -154,9 +164,40 @@ const Home = () => {
     setPgn(true);
   }
 
+
+
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+    title: {
+      flexGrow: 1,
+    },
+  }));
+
+  const classes = useStyles();
+
   return (
     <>
       <CssBaseline />
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" className={classes.title}>
+            EasyPrep
+          </Typography>
+        </Toolbar>
+      </AppBar>
       <Container maxWidth="lg">
         <h1>PGN Juicer</h1>
 
