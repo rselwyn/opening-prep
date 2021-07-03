@@ -7,6 +7,8 @@ import Chess, { ChessInstance, ShortMove } from "../lib/chess.js";
 import { Button, Container } from '@material-ui/core';
 import 'react-chessground/dist/styles/chessground.css'
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Player from '../components/player';
+
 
 const Home = () => {
 
@@ -16,6 +18,13 @@ const Home = () => {
   const [selectVisible, setSelectVisible] = useState(false)
   const [fen, setFen] = useState("")
   const [lastMove, setLastMove] = useState()
+
+
+  const [player, setPlayer] = useState();
+
+  // player {
+  //  running: true
+  //}
 
   const undo = () => {
     console.log("undo")
@@ -77,6 +86,8 @@ const Home = () => {
   }
 
   async function uploadPGN(e) {
+
+    console.log(e)
     e.preventDefault()
 
     // if (errorMsg) setErrorMsg('')
@@ -119,7 +130,8 @@ const Home = () => {
           style={{ margin: "auto" }}
         />
 
-        <button onClick={undo}>Undo</button>
+        <Player/>
+
 
       <style jsx>{`
         li {
